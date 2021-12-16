@@ -1,0 +1,77 @@
+{% extends "base/base.html" %}
+{% block title %} Dashboard {% endblock %}
+{% block stylesheets %}
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #344675;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+</style>
+{% endblock stylesheets %}
+{% block content %}
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="card-header ">
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <h2 class="card-title">Retrieved Clusters</h2>
+              </div>
+            </div>
+          </div>
+          {% block messages %}
+             {% if messages %}
+              <div class="container" style="color: {% if csv_upload_success %} green {% else %} firebrick {% endif %}; text-align:center;">
+                {% for message in messages %}
+                  {{ message }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endblock messages %}
+          <div class="card-body">
+            <div class="container">
+              {% if chart %}
+              <img src="data:image/png;base64,{{chart|safe}}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% for graph in graph_items %}
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-body">
+            <div class="container">
+              <img src="data:image/png;base64,{{graph|safe}}">
+            </div>
+          </div>
+        </div>
+      </div>
+     {%endfor%}
+
+
+
+
+
+
+    </div>
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}

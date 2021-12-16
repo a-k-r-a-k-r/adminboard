@@ -1,0 +1,161 @@
+{% extends "base/base.html" %}
+{% block title %} Page User {% endblock %}
+{% block stylesheets %}
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #344675;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+</style>
+{% endblock stylesheets %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Edit Profile</h5>
+        </div>
+        <div class="card-body">
+          <form role="form" method="post" action="{% url 'user-profile' %}">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div class="form-group">
+                  <label>UserID (disabled)</label>
+                  <input type="text" class="form-control" disabled="" value="{{ request.user.id }}">
+                </div>
+              </div>
+              <div class="col-md-3 px-md-1">
+                <div class="form-group">
+                  <label>Username</label>
+                  <input type="text" class="form-control" value="{{ request.user.username }}">
+                </div>
+              </div>
+              <div class="col-md-4 pl-md-1">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" class="form-control" value="{{ request.user.email }}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label>First Name</label>
+                  <input type="text" class="form-control" name="user_fname" placeholder="First Name" value="">
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label>Last Name</label>
+                  <input type="text" class="form-control" name="user_lname" placeholder="Last Name" value="">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Address</label>
+                  <input type="text" class="form-control" name="user_address" placeholder="Home Address" value="">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>City</label>
+                  <input type="text" class="form-control" name="user_city" placeholder="City" value="">
+                </div>
+              </div>
+              <div class="col-md-4 px-md-1">
+                <div class="form-group">
+                  <label>Country</label>
+                  <input type="text" class="form-control" name="user_country" placeholder="Country" value="">
+                </div>
+              </div>
+              <div class="col-md-4 pl-md-1">
+                <div class="form-group">
+                  <label>Postal Code</label>
+                  <input type="number" class="form-control" name="user_zip" placeholder="ZIP Code">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label>About Me</label>
+                  <textarea rows="4" cols="80" class="form-control" name="user_about" placeholder="About"></textarea>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" name="save" class="btn btn-fill btn-primary">Save</button>
+        </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-user">
+        <div class="card-body">
+          <p class="card-text">
+            <div class="author">
+              <div class="block block-one"></div>
+              <div class="block block-two"></div>
+              <div class="block block-three"></div>
+              <div class="block block-four"></div>
+              <a href="javascript:void(0)">
+                <img class="avatar" src="/static/assets/img/anime3.png" alt="Profile Pic">
+                <h5 class="title">
+                  {{ request.user.username }}
+                </h5>
+              </a>
+              <p class="description">
+                {{ request.user.email }}
+              </p>
+            </div>
+          </p>
+          <div class="card-description">
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="button-container">
+            <a href="https://abhirajkr.xyz" target=”_blank”>
+              <button class="btn btn-icon btn-round btn-facebook">
+                <i class="fas fa-globe"></i>
+              </button>
+            </a>
+            <a href="https://www.linkedin.com/in/abhi1223334444raj" target=”_blank”>
+              <button class="btn btn-icon btn-round btn-twitter">
+                <i class="fab fa-linkedin"></i>
+              </button>
+            </a>
+            <a href="https://github.com/a-k-r-a-k-r/" target=”_blank”>
+              <button class="btn btn-icon btn-round btn-google">
+                <i class="fab fa-github"></i>
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}

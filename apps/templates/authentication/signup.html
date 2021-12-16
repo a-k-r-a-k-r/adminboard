@@ -1,0 +1,77 @@
+{% extends "base/base.html" %}
+{% block title %} Sign Up {% endblock %}
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <form role="form" method="post" action="">
+                {% csrf_token %}
+                <div class="card-header">
+                  <h5 class="title">Sign Up</h5>
+                  <h6 class="card-category">
+                      {% if msg %}
+                        <span class="{% if success %}text-success {% else %} text-danger {% endif %}">{{ msg | safe }}</span>
+                      {% else %}
+                        Add your credentials
+                      {% endif %}
+                  </h6>
+                </div>
+              {% if success %}
+                <p>
+                  Please <a href="{% url 'login' %}">Log In</a> using the new account.
+                </p>
+              {% else %}
+                <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3 px-md-1">
+                        <div class="form-group">
+                          <label>Username</label>
+                          {{ form.username }}
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-danger">{{ form.username.errors }}</span>
+                    <div class="row">
+                      <div class="col-md-3 px-md-1">
+                        <div class="form-group">
+                          <label>Email</label>
+                          {{ form.email }}
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-danger">{{ form.email.errors }}</span>
+                    <div class="row">
+                      <div class="col-md-3 px-md-1">
+                        <div class="form-group">
+                          <label>Password</label>
+                          {{ form.password1 }}
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-danger">{{ form.password1.errors }}</span>
+                    <div class="row">
+                        <div class="col-md-3 px-md-1">
+                            <div class="form-group">
+                            <label>Password Check</label>
+                            {{ form.password2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-danger">{{ form.password2.errors }}</span>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" name="register" class="btn btn-fill btn-primary">Sign Up</button>
+                  &nbsp; &nbsp;
+                  Have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
+                </div>
+              {% endif %}
+              </form>
+            </div>
+          </div>
+      </div>
+
+
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}

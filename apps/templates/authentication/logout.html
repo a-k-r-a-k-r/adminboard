@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% block title %} Log Out {% endblock %}
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                  <h5 class="title">Logged Out Successfully</h5>
+                  <h6 class="card-category">
+                      Thank You for visiting our website.
+                  </h6>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-fill btn-primary" href="{% url 'login' %}">Log In</a>
+                  &nbsp; &nbsp;
+                  Don't have an account? <a href="{% url 'signup' %}" class="text-primary">Sign Up</a>
+                </div>
+            </div>
+          </div>
+      </div>
+
+
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}

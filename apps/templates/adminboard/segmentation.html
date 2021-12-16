@@ -1,0 +1,387 @@
+{% extends "base/base.html" %}
+{% block title %} Dashboard {% endblock %}
+{% block stylesheets %}
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #344675;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+</style>
+{% endblock stylesheets %}
+{% block content %}
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="card-header ">
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <h2 class="card-title">Upload File</h2>
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="document" id="document" required="required">
+
+              <button id="submit" type="submit" class="btn btn-primary" style="float:right; margin-right: 20px; margin-bottom: 40px;">Upload</button>
+              <input type="number" name="userncluster" placeholder="No. of Clusters" class="btn" style="float:right; background:white; margin-left: 20px;">
+            </form>
+              {% block messages %}
+                {% if messages %}
+                <div class="container" style="color: {% if csv_upload_success %} green {% else %} firebrick {% endif %}; text-align:center;">
+                  {% for message in messages %}
+                    {{ message }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              {% endblock messages %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if csv_upload_success %}
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">File Info</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              <canvas id="file-data-info"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">Silhouette Score</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              {% if silh %}
+              <img src="data:image/png;base64,{{silh|safe}}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">Null Value Info</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              <canvas id="null-data-bar"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">Elbow Graph</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              {% if elbow %}
+              <img src="data:image/png;base64,{{elbow|safe}}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">Clusters</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              {% if chart %}
+              <img src="data:image/png;base64,{{chart|safe}}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">Missing Data Info</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              <canvas id="null-data-pie"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      {% for key in count_for_pie.keys %}
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-title">{{key}} Distribution</h5>
+          </div>
+          <div class="card-body">
+            <div class="container">
+              <canvas id="{{key}}-data-pie"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      {%endfor%}
+
+    </div>
+
+
+
+
+
+    <div class="row">
+      <div class="container">
+        <div class="card card-tasks">
+          <div class="card-header ">
+            <h6 class="title d-inline"> CSV Data</h6>
+          </div>
+          <div class="card-body " >
+            <div class="table-full-width table-responsive" style="overflow-x:auto;">
+              <table class="table">
+                <thead class=" text-primary">
+                {% if csv_data_head %}
+                  <tr>
+                    <th>Index</th>
+                    {% for column_header in column_headers %}
+                    <th>{{ column_header }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                {% for i in csv_data_head %}
+                <tr>
+                  {%for key, value in i.items %}
+                      <td>{{value}}</td>
+                  {%endfor%}
+                </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{%endif%}
+
+{% endblock content %}
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.min.js"></script>
+<script>
+const ctx = document.getElementById('file-data-info').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Rows({{ no_of_rows }})', 'Columns({{ no_of_columns }})', 'Null Values({{ no_of_missing }})'],
+        datasets: [{
+            label: 'Count',
+            data: [{{ no_of_rows }}, {{ no_of_columns }}, {{ no_of_missing }}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const nullpiectx = document.getElementById('null-data-pie').getContext('2d');
+const myNullPieChart = new Chart(nullpiectx, {
+    type: 'pie',
+    data: {
+        labels: {{ null_data_distribution_keys | safe }},
+        datasets: [{
+            label: 'Count',
+            data: {{ null_data_distribution_values | safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                '#ff0000',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                '#00ffbf',
+                '#00ff00',
+                '#ffff00',
+                '#ff8000'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const nullbarctx = document.getElementById('null-data-bar').getContext('2d');
+const myNullBarChart = new Chart(nullbarctx, {
+    type: 'bar',
+    data: {
+        labels: {{ null_data_distribution_keys | safe }},
+        datasets: [{
+            label: 'Count',
+            data: {{ null_data_distribution_values | safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                '#ff0000',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                '#00ffbf',
+                '#00ff00',
+                '#ffff00',
+                '#ff8000'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+{% for key, value in count_for_pie.items %}
+const {{key}}piectx = document.getElementById('{{key}}-data-pie').getContext('2d');
+const {{key}}PieChart = new Chart({{key}}piectx, {
+    type: 'pie',
+    data: {
+        {% with labellist=value.labellist %}
+        labels: {{labellist | safe}},
+        {% endwith %}
+        datasets: [{
+            label: 'Count',
+            {% with datalist=value.datalist %}
+            data: {{datalist | safe}},
+            {% endwith %}
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                '#ff0000',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                '#00ffbf',
+                '#00ff00',
+                '#ffff00',
+                '#ff8000'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+{%endfor%}
+
+
+
+</script>
+{% endblock javascripts %}

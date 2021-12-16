@@ -1,0 +1,74 @@
+{% extends "base/base.html" %}
+{% block title %} UI Tables {% endblock %}
+{% block stylesheets %}
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #344675;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+</style>
+{% endblock stylesheets %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header">
+          <h4 class="card-title"> Uploaded Data </h4>
+        </div>
+
+        <div class="card-body " >
+            <div class="table-full-width table-responsive" style="overflow-x:auto;">
+              <table class="table">
+                <thead class=" text-primary">
+                {% if csv_data_head %}
+                  <tr>
+                    <th>Index</th>
+                    {% for column_header in column_headers %}
+                    <th>{{ column_header }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                {% for i in csv_data_head %}
+                <tr>
+                  {%for key, value in i.items %}
+                      <td>{{value}}</td>
+                  {%endfor%}
+                </tr>
+                {% endfor %}
+                {% endif %}
+                {% block messages %}
+                  {% if messages %}
+                  <div class="container" style="color: {% if csv_upload_success %} green {% else %} firebrick {% endif %}; text-align:center;">
+                    {% for message in messages %}
+                      {{ message }}
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                {% endblock messages %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}
