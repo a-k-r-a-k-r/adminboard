@@ -30,12 +30,12 @@
       <div class="col-lg-4">
         <div class="card card-chart">
           <div class="card-header">
-            <h5 class="card-category">Total Shipments</h5>
-            <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
+            <h5 class="card-category">Daily Visits</h5>
+            <h3 class="card-title"><i class="text-primary"></i> 21, 554</h3>
           </div>
           <div class="card-body">
             <div class="chart-area">
-              <canvas id="chartLinePurple"></canvas>
+              <canvas id="visitGraph"></canvas>
             </div>
           </div>
         </div>
@@ -43,12 +43,12 @@
       <div class="col-lg-4">
         <div class="card card-chart">
           <div class="card-header">
-            <h5 class="card-category">Daily Sales</h5>
-            <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500€</h3>
+            <h5 class="card-category">Sales</h5>
+            <h3 class="card-title"><i class="text-info"></i> ₹ 3,21,554</h3>
           </div>
           <div class="card-body">
             <div class="chart-area">
-              <canvas id="CountryChart"></canvas>
+              <canvas id="salesGraph"></canvas>
             </div>
           </div>
         </div>
@@ -56,12 +56,12 @@
       <div class="col-lg-4">
         <div class="card card-chart">
           <div class="card-header">
-            <h5 class="card-category">Completed Tasks</h5>
-            <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
+            <h5 class="card-category">Stock Price</h5>
+            <h3 class="card-title"><i class="text-success"></i> ₹ 983</h3>
           </div>
           <div class="card-body">
             <div class="chart-area">
-              <canvas id="chartLineGreen"></canvas>
+              <canvas id="stockGraph"></canvas>
             </div>
           </div>
         </div>
@@ -139,4 +139,164 @@
 
 
 {% endblock content %}
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+const salesGraphctx = document.getElementById('salesGraph').getContext('2d');
+const mysalesGraphChart = new Chart(salesGraphctx, {
+    type: 'line',
+    data: {
+        labels: ['19 Nov','20 Nov','21 Nov','22 Nov','23 Nov','24 Nov','25 Nov','26 Nov','27 Nov','28 Nov','29 Nov','30 Nov','1 Dec', '2 Dec','3 Dec','4 Dec','5 Dec','6 Dec','7 Dec','8 Dec','9 Dec','10 Dec','11 Dec','12 Dec','13 Dec','14 Dec'],
+        datasets: [{
+            label: 'Count',
+            data: [311232, 218220, 219310, 216360, 410260, 319120, 422123, 323180, 419140, 311425, 215405, 216610, 216670, 118623, 221620, 411720, 414760, 315760, 217170, 214833, 213880, 211920, 314825, 321805, 313710, 321554],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                '#ff0000',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                '#00ffbf',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#00ffbf',
+                '#00ff00',
+                '#ffff00',
+                '#ff8000'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+
+const visitGraphctx = document.getElementById('visitGraph').getContext('2d');
+const myvisitGraphChart = new Chart(visitGraphctx, {
+    type: 'bar',
+    data: {
+        labels: ['19 Nov','20 Nov','21 Nov','22 Nov','23 Nov','24 Nov','25 Nov','26 Nov','27 Nov','28 Nov','29 Nov','30 Nov','1 Dec', '2 Dec','3 Dec','4 Dec','5 Dec','6 Dec','7 Dec','8 Dec','9 Dec','10 Dec','11 Dec','12 Dec','13 Dec','14 Dec'],
+        datasets: [{
+            label: 'Daily Visits',
+            data: [11232, 18220, 19310, 16360, 10260, 19120, 22123, 23180, 19140, 11425, 15405, 16610, 16670, 18623, 21620, 11720, 14760, 15760, 17170, 14833, 13880, 11920, 14825, 21805, 13710, 21554],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                '#ff0000',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                '#00ffbf',
+                '#00ff00',
+                '#ffff00',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                '#ff0000',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                '#4000ff',
+                '#bf00ff',
+                '#ff00ff',
+                '#ff0040',
+                '#00ffff',
+                '#00ffbf',
+                '#00ff00',
+                '#ffff00',
+                '#ff8000'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+
+const stockGraphctx = document.getElementById('stockGraph').getContext('2d');
+const mystockGraphChart = new Chart(stockGraphctx, {
+    type: 'line',
+    data: {
+        labels: ['19 Nov','20 Nov','21 Nov','22 Nov','23 Nov','24 Nov','25 Nov','26 Nov','27 Nov','28 Nov','29 Nov','30 Nov','1 Dec', '2 Dec','3 Dec','4 Dec','5 Dec','6 Dec','7 Dec','8 Dec','9 Dec','10 Dec','11 Dec','12 Dec','13 Dec','14 Dec'],
+        datasets: [{
+            label: 'Stock Price',
+            data: [232, 220, 310, 360, 260, 120, 123, 180, 140, 425, 405, 610, 670, 623, 620, 720, 760, 760, 170, 833, 880, 920, 825, 805, 710, 983],
+            fill:false,
+            borderColor: [
+
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }
+        ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+
+{% endblock javascripts %}

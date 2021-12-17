@@ -83,7 +83,6 @@ def process_data(csv_dataframe, user_ncluster):
 
     # Choosing 1 to length of new-list columns
     X = customer_data_new.iloc[:, extension_list].values
-
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
