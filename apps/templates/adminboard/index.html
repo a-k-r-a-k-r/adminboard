@@ -70,14 +70,40 @@
 
 
     <div class="row">
+
+
+      <div class="modal fade" id="addtask">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="POST" action="{% url 'addtask' %}">
+              {% csrf_token %}
+              <div class="modal-body">
+                <b>Title</b>
+                <input class="form-control" name="task-text" style="color:black;">
+                <b>Priority</b>
+                <input class="form-control" name="task-priority" style="color:black;">
+                <b>Details</b>
+                <input class="form-control" name="task-details" style="color:black;">
+              </div>
+              <div class="modal-footer">
+                <input type="submit" class="btn btn-success pull-left" value="Add Task">
+              </div>
+            </form>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+
+
+
       <div class="col-lg-6 col-md-12">
         <div class="card card-tasks">
           <div class="card-header ">
             <h6 class="title d-inline">Tasks ({{ number }})</h6>
             <div class="dropdown">
-              <button type="button" class="btn btn-link dropdown-toggle btn-icon">
+              <a href="#" data-toggle="modal" data-target="#addtask" type="button" class="btn btn-link dropdown-toggle btn-icon">
                 <i class="fa fa-plus"></i>
-              </button>
+              </a>
 
             </div>
           </div>

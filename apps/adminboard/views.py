@@ -13,7 +13,17 @@ import json
 from .utils import process_data
 from django.contrib.auth.models import User
 from wsgiref.util import FileWrapper
+from .models import TodoList
 
+def addtask(request):
+    if request.method=='POST':
+        newtask = TodoList()
+        newtask.text = request.POST['task-text']
+        newtask.details = request.POST['task-details']
+        newtask.priority = int(request.POST['task-priority'])
+        newtask.user = request.user
+        newtask.save()
+        return redirect('index')
 
 
 # helper functions
