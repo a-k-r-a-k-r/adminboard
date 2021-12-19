@@ -31,7 +31,9 @@
       <div class="card ">
         <div class="card-header">
           <h4 class="card-title"> Uploaded Data </h4>
+          {% if csv_upload_success %}
           <a href="{% url 'download' %}">Download now</a>
+          {% endif %}
         </div>
 
         <div class="card-body " >

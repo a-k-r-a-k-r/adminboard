@@ -67,9 +67,33 @@
       </div>
      {%endfor%}
 
+      {% if silh %}
 
+     <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-body">
+            <div class="container">
+              {% if silh %}
+              <img src="data:image/png;base64,{{silh|safe}}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-body">
+            <div class="container">
+              {% if elbow %}
+              <img src="data:image/png;base64,{{elbow|safe}}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
 
+    {% endif %}
 
 
     </div>

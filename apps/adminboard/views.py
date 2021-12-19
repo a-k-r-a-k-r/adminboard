@@ -116,9 +116,6 @@ def pages(request):
             context['null_data_distribution_values'] = list(dict(csv_data.isnull().sum()).values())
             unaltered_data_csv.to_csv(d+'\\media\\resultumain.csv')
             request.session['resultpath'] = d+'\\media\\resultumain.csv'
-
-
-
             new_pie_data = {}
             for key, value in count_for_pie.items():
                 new_pie_data[key] = {'labellist':list(value.keys()), 'datalist':list(value.values())}
@@ -138,6 +135,7 @@ def pages(request):
             messages.warning(request, 'Wrong File Type: Upload CSV file only')
 
     context['csv_upload_success'] = csv_upload_success
+    request.session['csv_upload_success'] = csv_upload_success
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
@@ -174,6 +172,7 @@ def showsegmentationresult(request):
     try:
         context['chart'] = request.session['chart']
         context['silh'] = request.session['silh']
+        context['elbow'] = request.session['elbow']
         context['graph_items'] = request.session['graph_items']
     except:
         messages.warning(request, 'Upload a File to view the Segmentation')
@@ -185,6 +184,10 @@ def showtables(request):
     context = {}
     load_template = request.path.split('/')[-1]
     context['segment'] = load_template
+    try:
+        context['csv_upload_success'] = request.session['csv_upload_success']
+    except:
+        context['csv_upload_success'] = False
     try:
         context['csv_data_head'] = request.session['processed_table_data']
         context['column_headers'] = request.session['processed_column_headers']
