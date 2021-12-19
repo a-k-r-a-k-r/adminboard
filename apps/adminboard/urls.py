@@ -9,6 +9,7 @@ urlpatterns = [
     path('result.html', views.showsegmentationresult, name='segmentationresult'),
     path('user-profile.html', views.user_profile, name='user-profile'),
     path('tables.html', views.showtables, name='tables'),
+    path('download', views.download, name='download'),
     url(r'^.*\.*', views.pages, name='pages'),
 ]
 # url(r'^.*\.*', views.pages, name='pages'),

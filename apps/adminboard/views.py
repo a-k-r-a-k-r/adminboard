@@ -12,6 +12,7 @@ import pandas as pd
 import json
 from .utils import process_data
 from django.contrib.auth.models import User
+from wsgiref.util import FileWrapper
 
 
 
@@ -103,6 +104,9 @@ def pages(request):
             context['processed_table_data'] = processed_table_data
             context['null_data_distribution_keys'] = list(dict(csv_data.isnull().sum()).keys())
             context['null_data_distribution_values'] = list(dict(csv_data.isnull().sum()).values())
+            unaltered_data_csv.to_csv(d+'\\media\\resultumain.csv')
+            request.session['resultpath'] = d+'\\media\\resultumain.csv'
+
 
 
             new_pie_data = {}
@@ -177,6 +181,18 @@ def showtables(request):
     except:
         messages.warning(request, 'Upload a File to view the content')
     return render(request, 'adminboard/tables.html', context)
+
+def download(request):
+    file_path = request.session['resultpath']
+    file_wrapper = FileWrapper(open(request.session['resultpath'], 'rb'))
+    file_mimetype = "text/csv"
+    response = HttpResponse(file_wrapper, content_type=file_mimetype)
+    response['X-Sendfile'] = file_path
+    response['Content-length'] = os.stat(file_path).st_size
+    response['Content-Disposition'] = 'attachment; filename=resultumain.csv'
+    return response
+
+
 
 @login_required(login_url="/login/")
 def user_profile(request):
